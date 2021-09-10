@@ -1,0 +1,11 @@
+[package]
+name = "v2urldeco"
+version = "0.1.0"
+authors = ["ssfdust <ssfdust@gmail.com>"]
+edition = "2018"
+
+#String See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+decoder = { path = "./decoder"}
+decoder_marco = { path = "./decoder_marco"}
