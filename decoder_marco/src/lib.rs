@@ -6,11 +6,8 @@ use syn;
 
 #[proc_macro_derive(DecoderMacro)]
 pub fn decode_macro_derive(input: TokenStream) -> TokenStream {
-    // Construct a representation of Rust code as a syntax tree
-    // that we can manipulate
     let ast = syn::parse(input).unwrap();
 
-    // Build the trait implementation
     impl_decode_macro(&ast)
 }
 

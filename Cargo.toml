@@ -9,3 +9,4 @@ edition = "2018"
 [dependencies]
 decoder = { path = "./decoder"}
 decoder_marco = { path = "./decoder_marco"}
+fetcher = { path = "./fetcher" }
