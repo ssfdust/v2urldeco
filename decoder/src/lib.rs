@@ -33,21 +33,30 @@ fn padding(encoded_conf_str: String) -> String {
     encoded_conf_str
 }
 
+fn second_parse_config(config_str: &str) -> String {
+    let prefix_strip_regex: Regex = Regex::new(r"(vmess|ss)://").unwrap();
+    let config_str = prefix_strip_regex.replace_all(config_str, "");
+    decode_to_string(padding(config_str.to_string()).as_bytes())
+}
+
 pub trait ListDecoder: Decoder {
     fn explode_configs(&self) -> Vec<DecodedCfg> {
-        let prefix_strip_regex: Regex = Regex::new(r"(vmess|ss)://").unwrap();
         let mut configs: Vec<DecodedCfg> = Vec::new();
+        let mut nameinfo = String::new();
         for config_str in self.decode().split('\n') {
-            let mut nameinfo = String::new();
-            let config_str = prefix_strip_regex.replace_all(config_str, "");
-            let decoded_str = decode_to_string(padding(config_str.to_string()).as_bytes());
+            let mut decoded_str = second_parse_config(config_str);
             if decoded_str.contains("#") {
-                let (_config_str, _nameinfo) = decoded_str.split_once('#').unwrap();
-                nameinfo.push_str(_nameinfo);
+                match decoded_str.split_once('#') {
+                    None => (),
+                    Some((x, y)) => {
+                        nameinfo.push_str(x);
+                        decoded_str = y.to_owned();
+                    }
+                }
             }
             configs.push(DecodedCfg {
-                nameinfo: nameinfo.to_owned(),
-                decode_conf_str: decoded_str.to_owned()
+                nameinfo: nameinfo.clone(),
+                decode_conf_str: decoded_str.clone()
             });
         }
         configs
